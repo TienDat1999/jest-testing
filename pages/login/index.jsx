@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 export default function Login() {
   return (
     <div>
-      <h1>HI I'm from login page</h1>
+      <h1>LOGIN</h1>
       <div className="App">
       <Grid>
         <Card style={{ maxWidth: 450, padding: "20px 5px", margin: "0 auto" }}>
