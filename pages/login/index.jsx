@@ -5,14 +5,22 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
+import axiosService from '../../network/axiosMethod';
 
 export default function Login() {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const onLogin = (event) => {
     event.preventDefault()
-    console.log('userName', userName);
-    console.log('password', password);
+    const userForm = {
+      email: userName,
+      password: password
+    }
+    axiosService.post(`auth/login`, userForm)
+    .then(res => {
+      console.log('login success');
+      console.log(res.data);
+    })
   }
   
   const onUserNameChange = (event) => {
