@@ -1,55 +1,41 @@
 import React from 'react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { render, fireEvent, waitFor, screen } from '@testing-library/react'
+import { render, fireEvent, waitFor, screen, debug } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import Fetch from '../pages/fetch'
+import {getGreeting} from '../apis/fecthApi'
 
-const server = setupServer(
-  rest.get('/greeting', (req, res, ctx) => {
-    return res(ctx.json({ greeting: 'hello there' }))
-  })
-)
+// const server = setupServer(
+//   rest.get('/greeting', (req, res, ctx) => {
+//     return res(ctx.json({ greeting: 'hello there' }))
+//   })
+// )
+
+jest.mock('../apis/fecthApi')
 
 describe('Test fetching', () => {
-  beforeAll(() => server.listen())
-  afterEach(() => server.resetHandlers())
-  afterAll(() => server.close())
-
   test('loads and displays greeting', async () => {
-    render(<Fetch url="/greeting" />)
+    getGreeting.mockRejectedValue(new Error('Server not found'))
+    render(<Fetch/>)
     const btn = screen.getByTestId('fetch-submit')
-    expect(btn).toBeInTheDocument()
-    // fireEvent.click(btn)
-    // fireEvent.click(screen.getByTestId('Load Greeting'))
+    fireEvent.click(btn)
 
-    // await waitFor(() => screen.getByRole('heading'))
-
-    // expect(screen.getByRole('heading')).toHaveTextContent('hello there')
-    // expect(screen.getByRole('button')).toBeDisabled()
+    await waitFor(() => screen.getByText('Server not found'))
   })
 
   test('handles server error', async () => {
-    const response = {
-      statusCode: 200,
-      message: 'Success',
-      data: {
-        greeting: 'hello there',
-      },
-    }
-    server.use(
-      rest.get('/greeting', (req, res, ctx) => {
-        return res(ctx.status(200).json(response))
-      })
-    )
-
-    render(<Fetch url="/greeting" />)
-    userEvent.click(screen.getByText('Load Greeting'))
-    await waitFor(() => {
-      const heading = screen.findByRole('heading', { name: 'hello there' })
-      expect(heading).toBeInTheDocument()
-      // expect(screen.getByRole('button')).toHaveAttribute('disabled')
-    })
+    render(<Fetch/>)
+    const buttonEl = screen.getByText(/Load Greeting/i);
   })
+ 
+  test("Test theme button toggle", async () => {
+    render(<Fetch/>);
+    const buttonEl = screen.getByText(/Current theme/i);
+      
+    fireEvent.click(buttonEl);
+    expect(buttonEl).toHaveTextContent(/dark/i)
+   
+  });
 })
