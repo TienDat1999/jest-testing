@@ -2,7 +2,7 @@ import { instance as axiosClient } from './network'
 
 const axiosService = {
 
-  getAll(params: any, url: string): Promise<any> {
+  getAll(url: string, params: any): Promise<any> {
     return axiosClient.get(url, { params })
   },
 

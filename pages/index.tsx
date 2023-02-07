@@ -3,7 +3,17 @@ import Image from 'next/image'
 
 import styles from '@/pages/index.module.css'
 
+import * as math from '../function/math.js';
+
+
+
+export const doAdd      = (a, b) => math.add(a, b);
+export const doSubtract = (a, b) => math.subtract(a, b);
+export const doMultiply = (a, b) => math.multiply(a, b);
+export const doDivide   = (a, b) => math.divide(a, b);
+
 export default function Home() {
+
   return (
     <div className={styles.container}>
       <Head>
