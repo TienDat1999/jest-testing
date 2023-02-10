@@ -12,12 +12,15 @@
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.11.4",
     "@mui/styled-engine-sc": "^5.11.0",
+    "@types/uuid": "^9.0.0",
+    "ava": "^5.2.0",
     "axios": "^1.2.6",
     "msw": "^1.0.0",
     "next": "latest",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.16.4",

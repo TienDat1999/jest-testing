@@ -1,43 +1,35 @@
 
+import * as nextRouter from 'next/router';
+import { render, fireEvent, waitFor, screen, debug, getByPlaceholderText, cleanup } from '@testing-library/react'
+import Login from '../pages/login'
+import axiosService from '../network/axiosMethod';
 
-import {doAdd} from "../pages/index";
-import {add, greeting, bar} from "../function/math";
-import * as math from "../function/math";
+afterEach(cleanup);
+nextRouter.useRouter = jest.fn();
+nextRouter.useRouter.mockImplementation(() => ({ route: '/login' }));
 
-// import { render, fireEvent, waitFor, screen, debug } from '@testing-library/react'
-// import axios from 'axios'
-// import '@testing-library/jest-dom'
-// import Login from '../pages/login'
+describe('Test login', () => {
+  test('test login fail', async () => {
+    const loginSpy = jest.spyOn(axiosService, 'post')
+    loginSpy.mockRejectedValue(new Error('Async error message'))
+    render(<Login/>)
+   
+    const btn = screen.getByTestId('login')
+    fireEvent.click(btn)
+    await waitFor(() => screen.getByText('This is a fails alert — check it out!'))
+  })
 
-// const myMockFn = jest.fn(cb => cb(null, true));
-
-// describe('Test login', () => {
-//   test('login with correct account', async () => {
-//     axios.post.mockImplementationOnce(()=> Promise.resolve({
-//         statusCode: 200,
-//         message: 'successfully',
-//       }))
-//     render(<Fetch/>)
-
-//     const btn = screen.getByTestId('fetch-submit')
-//     fireEvent.click(btn)
-//     await waitFor(() => screen.getByText('Server not found'))
-//   })
-// })
-
-jest.mock('../function/math')
-const mockedSong = jest.mocked(math);
-
-test("calls math.add", () => {
-    doAdd(1,3)
-    expect(math.add).lastCalledWith(1,3)
-    mockedSong.add.mockReturnValue(4)
-    expect(mockedSong.add(1,2)).toBe(4)
-    // const addCaculate = jest.fn(doAdd)
-    // expect(addi).toReturnWith(1)
-  });
+  test('test login success', async () => {
+    const loginSpy = jest.spyOn(axiosService, 'post')
+    loginSpy.mockResolvedValue()
+    render(<Login/>)
+   
+    const btn = screen.getByTestId('login')
+    fireEvent.click(btn)
   
-  test("calls math.subtract", () => {
-    //app.doSubtract(1, 2);
-    // expect(math.subtract).toHaveBeenCalledWith(1, 2);
-  });
+    await waitFor(() => {
+      const ax = screen.queryByText('This is a fails alert — check it out!')
+      expect(ax).not.toBeInTheDocument()
+    })
+  })
+})

@@ -6,11 +6,14 @@ import Button from "@mui/material/Button";
 import { useState } from "react";
 import axiosService from "../../network/axiosMethod";
 import Alert from "@mui/material/Alert";
+import { useRouter } from 'next/router'
 
 export default function Login() {
+  const router = useRouter()
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [isToast, setIsToast] = useState(false);
+
   const onLogin = (event) => {
     event.preventDefault();
     const userForm = {
@@ -18,9 +21,11 @@ export default function Login() {
       password: password,
     };
     axiosService.post(`auth/login`, userForm).then((res) => {
-      console.log(res.data);
+      setIsToast(false)
+      router.push('/')
     }).catch((e)=>{
-      throw(e)
+      setIsToast(true)
+      // throw(e)
     });
   };
 
@@ -36,8 +41,8 @@ export default function Login() {
     <div>
       {isToast && (
         <div style={{position:'absolute', top:'10px', right:'10px'}}>
-          <Alert severity="success" color="info">
-            This is a success alert — check it out!
+          <Alert severity="error" color="error">
+            This is a fails alert — check it out!
           </Alert>
         </div>
       )}
@@ -74,7 +79,7 @@ export default function Login() {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <Button type="submit" variant="outlined" onClick={onLogin}>
+                    <Button data-testid="login" type="submit" variant="outlined" onClick={onLogin}>
                       Submit
                     </Button>
                   </Grid>
