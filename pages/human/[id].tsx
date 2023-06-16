@@ -1,11 +1,10 @@
-import Link from 'next/link'
+import { useEffect } from 'react'
+import HumanDetail from '../../components/human-detail'
 
-const HumanDetail = () => {
+const HumanDetailPage = () => {
   return (
-    <div>
-      <h1>Human Detail</h1>
-    </div>
+    <HumanDetail/>
   )
 }
 
-export default HumanDetail
+export default HumanDetailPage
